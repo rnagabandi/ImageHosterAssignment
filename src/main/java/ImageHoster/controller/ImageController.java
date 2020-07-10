@@ -80,13 +80,13 @@ public class ImageController {
 	}
 	
 	@RequestMapping("/image/{imageId}/{imageTitle}/comments")
-	public String addComment(@PathVariable("imageId") String imageId, @PathVariable("imageTitle") String imageTitle, Model model,HttpSession session) {
+	public String addComment(@PathVariable("imageId") String imageId, @PathVariable("imageTitle") String imageTitle, Model model,HttpSession session,@RequestParam("comment") String comment) {
 		
 		Image image = imageService.getImage(Integer.parseInt(imageId));
 		User user = (User) session.getAttribute("loggeduser");
 		
-		Comment comment = new Comment("comments by user", new Date(), user, image);
-		commentService.uploadImage(comment);
+		Comment commentObj = new Comment(comment, new Date(), user, image);
+		commentService.uploadImage(commentObj);
 		
 		return "redirect:/images/"+image.getId()+"/"+image.getTitle();
 	}
