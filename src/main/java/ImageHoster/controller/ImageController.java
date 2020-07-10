@@ -1,10 +1,14 @@
 package ImageHoster.controller;
 
-import ImageHoster.model.Image;
-import ImageHoster.model.Tag;
-import ImageHoster.model.User;
-import ImageHoster.service.ImageService;
-import ImageHoster.service.TagService;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,15 +18,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.*;
+import ImageHoster.model.Comment;
+import ImageHoster.model.Image;
+import ImageHoster.model.Tag;
+import ImageHoster.model.User;
+import ImageHoster.service.CommentService;
+import ImageHoster.service.ImageService;
+import ImageHoster.service.TagService;
 
 @Controller
 public class ImageController {
 
 	@Autowired
 	private ImageService imageService;
+	
+	@Autowired
+	private CommentService commentService;
 
 	@Autowired
 	private TagService tagService;
@@ -53,8 +64,10 @@ public class ImageController {
 	@RequestMapping("/images/{id}/{title}")
 	public String showImage(@PathVariable("title") String title, @PathVariable("id") String id, Model model) {
 		Image image = imageService.getImage(Integer.parseInt(id));
+		List<Comment> comments=commentService.getAllCommentByImageId(id);
 		model.addAttribute("image", image);
 		model.addAttribute("tags", image.getTags());
+		model.addAttribute("comments", comments);
 		return "images/image";
 	}
 
@@ -64,6 +77,18 @@ public class ImageController {
 	@RequestMapping("/images/upload")
 	public String newImage() {
 		return "images/upload";
+	}
+	
+	@RequestMapping("/image/{imageId}/{imageTitle}/comments")
+	public String addComment(@PathVariable("imageId") String imageId, @PathVariable("imageTitle") String imageTitle, Model model,HttpSession session,@RequestParam("comment") String comment) {
+		
+		Image image = imageService.getImage(Integer.parseInt(imageId));
+		User user = (User) session.getAttribute("loggeduser");
+		
+		Comment commentObj = new Comment(comment, new Date(), user, image);
+		commentService.uploadImage(commentObj);
+		
+		return "redirect:/images/"+image.getId()+"/"+image.getTitle();
 	}
 
 	// This controller method is called when the request pattern is of type
