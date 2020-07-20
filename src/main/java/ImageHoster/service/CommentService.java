@@ -23,5 +23,10 @@ public class CommentService {
     public List<Comment> getAllCommentByImageId(String imageId) {
     	return commentRepository.getAllComments(imageId);
     }
+    
+  //The method calls the uploadImage() method in the Repository and passes the image to be persisted in the database
+    public void uploadComment(Comment comment) {
+        commentRepository.uploadComment(comment);
+    }
 	
 }

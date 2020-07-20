@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(CommentControllerTest.class)
+@WebMvcTest(CommentController.class)
 public class CommentControllerTest {
     protected MockHttpSession session;
 
