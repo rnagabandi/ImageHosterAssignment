@@ -8,7 +8,7 @@ public class StringUtils {
 	public static boolean isValidPassword(String password) {
 
 		// Regex to check valid password.
-		String regex = "^(?=.*[0-9])" + "(?=.*[a-z])(?=.*[A-Z])" + "(?=.*[@#$%^&+=])" + "(?=\\S+$).{3,100}$";
+		String regex = "^(?=.*[0-9])" + "(?=.*[a-z])" + "(?=.*[@#$%^&+=])" + "(?=\\S+$).{3,100}$";
 
 		// Compile the ReGex
 		Pattern p = Pattern.compile(regex);
@@ -27,6 +27,12 @@ public class StringUtils {
 		// Return if the password
 		// matched the ReGex
 		return m.matches();
+	}
+	
+	public static void main(String[] args) {
+		
+		System.out.println(isValidPassword("password1@"));
+		
 	}
 
 }
